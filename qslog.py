@@ -39,34 +39,6 @@ myf_code = [c for c in mod_code.co_consts if isinstance(c, types.CodeType)][0]
 myf = types.FunctionType(myf_code, {})
 
 
-def onstartup(e):
-    print 'starting up'
-
-def onenterhome(e):
-    print 'entering home'
-    setattr(e.command, 'do_session', types.MethodType(do_session, e.command))
-    
-def onenterwaiting_exercise(e):
-    e.command.prompt = 'exercise: '
-
-def do_session(self, line):
-    print 'in session'
-    self.state_machine.start_session(command = self)
-
-state_config = {
-        'initial': {'state': 'home', 'defer': True},
-        'events': [
-            {'name': 'start_session', 'src' : 'home', 'dst' : 'waiting_exercise'},
-            {'name': 'abort', 'src': 'waiting_exercise', 'dst': 'home'},
-            {'name': 'done', 'src' : 'workout', 'dst': 'home'},
-            {'name': 'done', 'src': 'alco', 'dst': 'home'}
-            ],
-        'callbacks': {
-            'onstartup': onstartup,
-            'onenterhome': onenterhome,
-            'onenterwaiting_exercise': onenterwaiting_exercise
-            }
-        }
 
 class Command(cmd.Cmd):
     def __init__(self, config):
@@ -97,18 +69,7 @@ class Command(cmd.Cmd):
 
 
 if __name__ == '__main__':
+    import config
 
-    Command(state_config).cmdloop()
+    Command(config.state_config).cmdloop()
 
-    sm = fysom.Fysom({'initial': 'home',
-                    'events': [
-                        {'name': 'wo', 'src' : 'home', 'dst' : 'workout'},
-                        {'name': 'alc', 'src' : 'home', 'dst' : 'alco'},
-                        {'name': 'done', 'src' : 'workout', 'dst': 'home'},
-                        {'name': 'done', 'src': 'alco', 'dst': 'home'}
-                        ],
-                    'callbacks': {
-                        'onenterworkout': onenterwo,
-                        'onwo': onwo
-                        }
-                    })
