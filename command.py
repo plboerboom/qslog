@@ -33,6 +33,9 @@ myf_code = [c for c in mod_code.co_consts if isinstance(c, types.CodeType)][0]
 
 myf = types.FunctionType(myf_code, {})
 
+def do_sets(line):
+    print 'sets'
+    print line
 
 class Command(cmd.Cmd):
     def __init__(self):
@@ -41,9 +44,13 @@ class Command(cmd.Cmd):
         # attach function at runtime
         setattr(self, 'do_f', myf)
 
-    def do_log(self, msg):
+    def do_w(self, msg):
         self.prompt = 'reps: '
+        setattr(self, 'do_sets', do_sets)
         print msg
+
+    def do_q(self, line):
+        return True
 
     def do_EOF(self, line):
         return True
