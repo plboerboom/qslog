@@ -11,19 +11,20 @@ import readline
 ## the user config is essentially describing a state machine for the interpreter.
 
 
+## create function at runtime
 myf_ast = ast.FunctionDef(
         name = 'f',
-        args = ast.arguments(
-            args = [ast.Name(id='a', ctx=ast.Param(), lineno = 1, col_offset=6)],
-            vararg = None, kwarg = None, defaults = []
-            ),
-        body = [ast.Print(dest=None, values=[ast.Num(n=42, lineno=1, col_offset=16)],
-                nl = True,
-                lineno = 1,
-                col_offset = 9)],
+        args = ast.arguments(args = [ast.Name(id='a', ctx=ast.Param())],
+                             vararg = None, kwarg = None, defaults = []
+                            ),
+        body = [ast.Print(dest=None,
+                          values=[ast.Num(n=42)],
+                          nl = True)
+               ],
         decorator_list = [],
-        lineno = 1,
-        col_offset = 0)
+)
+
+ast.fix_missing_locations(myf_ast)
 
 mod_ast = ast.Module(body=[myf_ast])
 mod_code = compile(mod_ast, 'notafile', 'exec')
@@ -32,10 +33,12 @@ myf_code = [c for c in mod_code.co_consts if isinstance(c, types.CodeType)][0]
 
 myf = types.FunctionType(myf_code, {})
 
+
 class Command(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
 
+        # attach function at runtime
         setattr(self, 'do_f', myf)
 
     def do_log(self, msg):
