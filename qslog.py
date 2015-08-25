@@ -110,6 +110,15 @@ class Command(cmd.Cmd):
 
         self.state_machine.startup()
 
+        # cmd.Cmd's 'help' uses its get_names method to display
+        # available commands. But get_names uses dir() on the class,
+        # so only sees the names defined statically in the source.
+        # We patch it to make it recognize the dynamically added commands.
+        def new_get_names(self):
+            return vars(self).keys() + dir(self.__class__)
+
+        cmd.Cmd.get_names = new_get_names
+
         cmd.Cmd.__init__(self)
 
     def do_q(self, line):
