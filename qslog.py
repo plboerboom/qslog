@@ -20,7 +20,37 @@ class Command(cmd.Cmd):
     def __init__(self):
         import config
 
-        print config.state_config
+        # Automatically add callbacks defined in config.
+        event_callback_prefixes = [ 'onbefore', 'onafter' ]
+        state_callback_prefixes = [ 'onleave', 'onenter', 'onreenter' ]
+
+        event_names = [e['name'] for e in config.state_config['events']]
+        state_names = set(
+                [
+                state for sublist in
+                [[e['src'], e['dst']] for e in config.state_config['events']]
+                for state in sublist
+                ]
+                )
+
+        config.state_config['callbacks'] = {}
+        callbacks = config.state_config['callbacks']
+
+        for event_name in event_names:
+            for prefix in event_callback_prefixes:
+                fname = prefix + event_name
+                if hasattr(config, fname):
+                    f = getattr(config, fname)
+                    if hasattr(f, '__call__'):
+                        callbacks[fname] = f
+
+        for state_name in state_names:
+            for prefix in state_callback_prefixes:
+                fname = prefix + state_name
+                if hasattr(config, fname):
+                    f = getattr(config, fname)
+                    if hasattr(f, '__call__'):
+                        callbacks[fname] = f
 
         self.state_machine = fysom.Fysom(config.state_config)
 
