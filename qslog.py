@@ -9,10 +9,11 @@ import fysom
 
 def transition(f):
     def inner(self, line):
-        smf = getattr(self.state_machine, f.__name__.replace('do_', ''))
-        smf()
-        print self.state_machine.current
-        #self.state_machine.goto_one()
+        smf_name = f.__name__.replace('do_', '')
+        if hasattr(self.state_machine, smf_name):
+            smf = getattr(self.state_machine, smf_name)
+            if hasattr(smf, '__call__'):
+                smf()
         return f(self, line)
     return inner
 
@@ -108,6 +109,7 @@ class Command(cmd.Cmd):
         fysom.Fysom._enter_state = new_enter_state
 
         self.state_machine.startup()
+
         cmd.Cmd.__init__(self)
 
     def do_q(self, line):
