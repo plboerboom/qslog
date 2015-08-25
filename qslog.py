@@ -8,42 +8,44 @@ import inspect
 
 import fysom
 
-## It's unclear whether the cmd framework will work for what we need to do.
-## We need:
-##   - to be able to create the language it understands at runtime
-##   - to be able to accept just values in some contexts (not mandatory)
-
-## the user config is essentially describing a state machine for the interpreter.
-
-
-## create function at runtime
-myf_ast = ast.FunctionDef(
-        name = 'f',
-        args = ast.arguments(args = [ast.Name(id='a', ctx=ast.Param())],
-                             vararg = None, kwarg = None, defaults = []
-                            ),
-        body = [ast.Print(dest=None,
-                          values=[ast.Num(n=42)],
-                          nl = True)
-               ],
-        decorator_list = [],
-)
-
-ast.fix_missing_locations(myf_ast)
-
-mod_ast = ast.Module(body=[myf_ast])
-mod_code = compile(mod_ast, 'notafile', 'exec')
-
-myf_code = [c for c in mod_code.co_consts if isinstance(c, types.CodeType)][0]
-
-myf = types.FunctionType(myf_code, {})
-
-
-
 class Command(cmd.Cmd):
-    def __init__(self, config):
-        self.state_machine = fysom.Fysom(config)
-        self.state_machine.startup(command = self)
+    def __init__(self):
+        import config
+
+        self.state_machine = fysom.Fysom(config.state_config)
+
+        command = self
+
+        state_map = {}
+        for ev, mp in self.state_machine._map.iteritems():
+            for src in mp:
+                state_map.setdefault(src, []).append(ev)
+
+        def new_enter_state(self, e):
+            print 'patched!'
+            e.command = command
+            
+            for nm in vars(config):
+                if nm.startswith('do_') and hasattr(command, nm):
+                    delattr(command, nm)
+
+            if e.dst in state_map:
+                print state_map[e.dst]
+                for ev in state_map[e.dst]:
+                    fname = 'do_' + ev
+                    if fname in vars(config):
+                        print 'found it!'
+                        print getattr(config, fname)
+                        f = getattr(config, fname)
+                        setattr(command, fname , types.MethodType(f, command)) 
+
+            for fnname in ['onenter' + e.dst, 'on' + e.dst]:
+                if hasattr(self, fnname):
+                    return getattr(self, fnname)(e)
+
+        fysom.Fysom._enter_state = new_enter_state
+
+        self.state_machine.startup()
         cmd.Cmd.__init__(self)
 
         # attach function at runtime
@@ -51,11 +53,6 @@ class Command(cmd.Cmd):
 #        delattr(self, 
 
 
-    def do_abort(self, line):
-        self.state_machine.abort(cmd = self)
-
-    def do_ex(self, line):
-        print line
 
     def do_q(self, line):
         return True
@@ -69,7 +66,6 @@ class Command(cmd.Cmd):
 
 
 if __name__ == '__main__':
-    import config
 
-    Command(config.state_config).cmdloop()
+    Command().cmdloop()
 
