@@ -1,17 +1,15 @@
 from qslog import transition
 
-def onstartup(e):
-    pass
-
 def onenterhome(e):
-    e.command.prompt = 'home: '
+    e.command.prompt = '> '
     
 def onenterone(e):
+    print e.command.line
     e.command.prompt = 'one: '
 
 @transition
-def do_one(self, line):
-    pass
+def do_wo(self, line):
+    self.line = line
 
 @transition
 def do_abort(self, line):
@@ -32,7 +30,7 @@ def do_home(self, line):
 state_config = {
         'initial': {'state': 'home', 'defer': True},
         'events': [
-            {'name': 'one', 'src' : 'home', 'dst' : 'one'},
+            {'name': 'wo', 'src' : 'home', 'dst' : 'one'},
             {'name': 'abort', 'src': 'one', 'dst': 'home'},
             {'name': 'two', 'src' : 'one', 'dst': 'two'},
             {'name': 'two', 'src': 'two', 'dst': 'two'},
@@ -40,3 +38,7 @@ state_config = {
             ]
         }
 
+# TODO: Figure out how to pass state across transitions
+# TODO: Write data
+# TODO: Autocomplete
+# TODO: Control state transition with logic in command

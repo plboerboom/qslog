@@ -10,11 +10,15 @@ import fysom
 def transition(f):
     def inner(self, line):
         smf_name = f.__name__.replace('do_', '')
+
+        res = f(self, line)
+
         if hasattr(self.state_machine, smf_name):
             smf = getattr(self.state_machine, smf_name)
             if hasattr(smf, '__call__'):
                 smf()
-        return f(self, line)
+
+        return res
     return inner
 
 class Command(cmd.Cmd):
@@ -81,10 +85,6 @@ class Command(cmd.Cmd):
         # when transitioning states. To do so, we
         # 'patch' fysom's enter state method
         def new_enter_state(self, e):
-            # attach the cmd object to the event so it
-            # is accessible from user-defined transition functions
-            e.command = command
-            
             # detach all 'do_*' functions defined in config
             for nm in vars(config):
                 if nm.startswith('do_') and hasattr(command, nm):
@@ -120,6 +120,9 @@ class Command(cmd.Cmd):
         cmd.Cmd.get_names = new_get_names
 
         cmd.Cmd.__init__(self)
+
+    def do_smcurr(self, line):
+        print self.state_machine.current
 
     def do_q(self, line):
         return True
