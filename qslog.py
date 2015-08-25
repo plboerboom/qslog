@@ -20,6 +20,8 @@ class Command(cmd.Cmd):
     def __init__(self):
         import config
 
+        print config.state_config
+
         self.state_machine = fysom.Fysom(config.state_config)
 
         command = self
@@ -31,6 +33,19 @@ class Command(cmd.Cmd):
             for src in mp:
                 state_map.setdefault(src, []).append(ev)
 
+        # We want the event to include the cmd object so that
+        # it is accessible to the user-defined transition function.
+        # To make it so, we 'patch' fysom's before_event method,
+        # which is the first in its sequence of hooks.
+        def new_before_event(self, e):
+            e.command = command
+
+            fnname = 'onbefore' + e.event
+            if hasattr(self, fnname):
+                return getattr(self, fnname)(e)
+
+        fysom.Fysom._before_event = new_before_event
+        
         # We want to attach and detach commands to cmd
         # when transitioning states. To do so, we
         # 'patch' fysom's enter state method

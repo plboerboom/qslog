@@ -38,12 +38,6 @@ state_config = {
             {'name': 'goto_two', 'src': 'two', 'dst': 'two'},
             {'name': 'goto_home', 'src': 'two', 'dst': 'home'}
             ],
-        'callbacks': {
-            'onstartup': onstartup,
-            'onenterhome': onenterhome,
-            'onenterone': onenterone,
-            'onentertwo': onentertwo
-            }
         }
 
 # TODO: modify fysom to search for handlers in this module
