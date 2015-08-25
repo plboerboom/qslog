@@ -37,7 +37,7 @@ state_config = {
             {'name': 'goto_two', 'src' : 'one', 'dst': 'two'},
             {'name': 'goto_two', 'src': 'two', 'dst': 'two'},
             {'name': 'goto_home', 'src': 'two', 'dst': 'home'}
-            ],
+            ]
         }
 
 # TODO: modify fysom to search for handlers in this module
