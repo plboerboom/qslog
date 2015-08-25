@@ -1,4 +1,4 @@
-import types
+from qslog import transition
 
 def onstartup(e):
     print 'starting up'
@@ -9,21 +9,24 @@ def onenterhome(e):
 def onenterone(e):
     e.command.prompt = 'one: '
 
+@transition
 def do_goto_one(self, line):
     print line
-    self.state_machine.goto_one()
 
+@transition
 def do_abort(self, line):
-    self.state_machine.abort()
+    pass
 
 def onentertwo(e):
     e.command.prompt = 'two: '
 
+@transition
 def do_goto_two(self, line):
-    self.state_machine.goto_two()
+    pass
 
+@transition
 def do_goto_home(self, line):
-    self.state_machine.goto_home()
+    pass
 
 
 state_config = {
@@ -43,3 +46,5 @@ state_config = {
             }
         }
 
+# TODO: modify fysom to search for handlers in this module
+#       rather than requiring explicit call-back registration

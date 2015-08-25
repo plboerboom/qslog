@@ -1,12 +1,20 @@
 #! /usr/bin/env python
 
-import ast
 import types
 import cmd
 import readline
 import inspect
 
 import fysom
+
+def transition(f):
+    def inner(self, line):
+        smf = getattr(self.state_machine, f.__name__.replace('do_', ''))
+        smf()
+        print self.state_machine.current
+        #self.state_machine.goto_one()
+        return f(self, line)
+    return inner
 
 class Command(cmd.Cmd):
     def __init__(self):
@@ -22,7 +30,6 @@ class Command(cmd.Cmd):
                 state_map.setdefault(src, []).append(ev)
 
         def new_enter_state(self, e):
-            print 'patched!'
             e.command = command
             
             for nm in vars(config):
@@ -30,12 +37,9 @@ class Command(cmd.Cmd):
                     delattr(command, nm)
 
             if e.dst in state_map:
-                print state_map[e.dst]
                 for ev in state_map[e.dst]:
                     fname = 'do_' + ev
                     if fname in vars(config):
-                        print 'found it!'
-                        print getattr(config, fname)
                         f = getattr(config, fname)
                         setattr(command, fname , types.MethodType(f, command)) 
 
@@ -48,21 +52,12 @@ class Command(cmd.Cmd):
         self.state_machine.startup()
         cmd.Cmd.__init__(self)
 
-        # attach function at runtime
-        #setattr(self, 'do_f', myf)
-#        delattr(self, 
-
-
-
     def do_q(self, line):
         return True
 
     def do_EOF(self, line):
         return True
 
-
-
-######################
 
 
 if __name__ == '__main__':
