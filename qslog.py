@@ -24,25 +24,38 @@ class Command(cmd.Cmd):
 
         command = self
 
+        # fysom's internal map is {event: {src: 'src', dst: 'dst}}
+        # we need a lookup from src states to valid events.
         state_map = {}
         for ev, mp in self.state_machine._map.iteritems():
             for src in mp:
                 state_map.setdefault(src, []).append(ev)
 
+        # We want to attach and detach commands to cmd
+        # when transitioning states. To do so, we
+        # 'patch' fysom's enter state method
         def new_enter_state(self, e):
+            # attach the cmd object to the event so it
+            # is accessible from user-defined transition functions
             e.command = command
             
+            # detach all 'do_*' functions defined in config
             for nm in vars(config):
                 if nm.startswith('do_') and hasattr(command, nm):
                     delattr(command, nm)
 
+            # look up new state in our map
             if e.dst in state_map:
+                # look up valid events for new state
                 for ev in state_map[e.dst]:
                     fname = 'do_' + ev
+                    # look for functions in config that match the valid events
                     if fname in vars(config):
                         f = getattr(config, fname)
-                        setattr(command, fname , types.MethodType(f, command)) 
-
+                        if hasattr(f, '__call__'):
+                            setattr(command, fname, types.MethodType(f, command)) 
+            
+            # original method code
             for fnname in ['onenter' + e.dst, 'on' + e.dst]:
                 if hasattr(self, fnname):
                     return getattr(self, fnname)(e)
