@@ -16,7 +16,10 @@ def transition(f):
         if hasattr(self.state_machine, smf_name):
             smf = getattr(self.state_machine, smf_name)
             if hasattr(smf, '__call__'):
-                smf()
+                try:
+                    smf()
+                except fysom.Canceled:
+                    pass
 
         return res
     return inner
