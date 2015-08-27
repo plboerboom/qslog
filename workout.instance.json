@@ -1,5 +1,14 @@
 {
   "datetime": "2012-08-26T19:00:00-04:00",
-  "workout": {"name": "Deadlift", "reps": 6}
+  "workout": [
+    [
+    {"name": "Deadlift", "reps": 6},
+    {"name": "Ring pullup", "reps": 6}
+    ],
+    [
+    {"name": "Deadlift", "reps": 6},
+    {"name": "Ring pullup", "reps": 6}
+    ]
+    ]
 }
 

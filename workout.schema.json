@@ -47,6 +47,19 @@
       }
       ]
     },
+    "rest":{
+      "type": "object",
+      "properties": {
+        "name": {"enum": ["rest"]},
+        "duration": {
+          "type": "object",
+          "properties": {
+            "units": {"enum": ["second", "minute", "hour"]},
+            "quantity": {"type": "number"}
+          }
+        }
+      }
+    },
     "deadlift": { "allOf": [
       {"$ref": "#/definitions/baseRepExercise"},
       {"properties": { "name": { "pattern": "Deadlift" } } }
