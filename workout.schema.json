@@ -28,25 +28,29 @@
       {"$ref": "#/definitions/ringPullup"}
     ]
     },
-    "deadlift": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "Deadlift"
-        }
-      },
-      "required": ["name"]
+    "baseExercise": {
+      "type": "object"
     },
-    "ringPullup": {
-      "type": "object",
-      "properties": {
+    "deadlift": {
+      "allOf": [
+        {"$ref": "#/definitions/baseExercise"},
+        {"properties":
+          { "name": { "type": "string", "pattern": "Deadlift" } },
+          "required": ["name"]
+        }
+          ]
+    },
+    "ringPullup": { "allOf": [
+      {"$ref": "#/definitions/baseExercise"},
+      {"properties": {
         "name": {
-          "type": "string",
-          "pattern": "ringPullup"
+          "type": "string", 
+          "pattern": "Ring pullup"
         }
       },
       "required": ["name"]
+      }
+      ]
     }
   }
 }
