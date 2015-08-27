@@ -3,7 +3,8 @@
   "workout": [
     [
     {"name": "Deadlift", "reps": 6},
-    {"name": "Ring pullup", "reps": 6}
+    {"name": "Ring pullup", "reps": 6},
+    {"name": "Rest", "duration": {"quantity": 2, "units": "minute"}}
     ],
     [
     {"name": "Deadlift", "reps": 6},

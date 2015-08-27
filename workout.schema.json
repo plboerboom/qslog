@@ -23,7 +23,8 @@
       "items": {
         "anyOf": [
           {"$ref": "#/definitions/sequence"},
-          {"$ref": "#/definitions/atomicExercise"}
+          {"$ref": "#/definitions/atomicExercise"},
+          {"$ref": "#/definitions/rest"}
           ]
       }
     },
@@ -50,7 +51,7 @@
     "rest":{
       "type": "object",
       "properties": {
-        "name": {"enum": ["rest"]},
+        "name": {"enum": ["Rest"]},
         "duration": {
           "type": "object",
           "properties": {
