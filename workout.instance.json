@@ -2,12 +2,12 @@
   "datetime": "2012-08-26T19:00:00-04:00",
   "workout": [
     [
-    {"name": "Deadlift", "reps": 6},
+    {"name": "Deadlift", "reps": 6, "weight": {"quantity": 225, "units": "pound"}},
     {"name": "Ring pullup", "reps": 6},
     {"name": "Rest", "duration": {"quantity": 2, "units": "minute"}}
     ],
     [
-    {"name": "Deadlift", "reps": 6},
+    {"name": "Deadlift", "reps": 6, "weight": {"quantity": 225, "units": "pound"}},
     {"name": "Ring pullup", "reps": 6}
     ]
     ]

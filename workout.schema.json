@@ -48,6 +48,22 @@
       }
       ]
     },
+    "baseBarbellExercise": { "allOf": [
+      {"$ref": "#/definitions/baseRepExercise"},
+      {"properties":
+        { "weight": { "$ref": "#/definitions/weight" } },
+        "required": ["weight"]
+      }
+      ]
+    },
+    "weight": {
+      "type": "object",
+      "properties": {
+        "quantity": {"type": "number"},
+        "units": {"enum": ["pound", "kilogram"]}
+      },
+      "required": ["quantity", "units"]
+    },
     "rest":{
       "type": "object",
       "properties": {
@@ -62,7 +78,7 @@
       }
     },
     "deadlift": { "allOf": [
-      {"$ref": "#/definitions/baseRepExercise"},
+      {"$ref": "#/definitions/baseBarbellExercise"},
       {"properties": { "name": { "pattern": "Deadlift" } } }
       ]
     },
