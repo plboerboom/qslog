@@ -8,84 +8,122 @@
       "type": "string",
       "format": "date-time"
     },
-    "workout": { "oneOf": [
-      {"$ref": "#/definitions/sequence"},
-      {"$ref": "#/definitions/atomicExercise"}
-      ]
+    "workout": {
+      "oneOf": [{
+        "$ref": "#/definitions/sequence"
+      }, {
+        "$ref": "#/definitions/atomicExercise"
+      }]
     }
   },
 
-  "required" : ["datetime", "workout"],
+  "required": ["datetime", "workout"],
 
   "definitions": {
-    "sequence" : {
+    "sequence": {
       "type": "array",
       "items": {
-        "anyOf": [
-          {"$ref": "#/definitions/sequence"},
-          {"$ref": "#/definitions/atomicExercise"},
-          {"$ref": "#/definitions/rest"}
-          ]
+        "anyOf": [{
+          "$ref": "#/definitions/sequence"
+        }, {
+          "$ref": "#/definitions/atomicExercise"
+        }, {
+          "$ref": "#/definitions/rest"
+        }]
       }
     },
-    "atomicExercise": { "oneOf": [
-      {"$ref": "#/definitions/deadlift"},
-      {"$ref": "#/definitions/ringPullup"}
-    ]
+    "atomicExercise": {
+      "oneOf": [{
+        "$ref": "#/definitions/deadlift"
+      }, {
+        "$ref": "#/definitions/ringPullup"
+      }]
     },
     "baseExercise": {
       "type": "object",
       "properties": {
-        "name": {"type": "string"}
+        "name": {
+          "type": "string"
+        }
       },
       "required": ["name"]
     },
-    "baseRepExercise": { "allOf": [
-      {"$ref": "#/definitions/baseExercise"},
-      {"properties":
-        { "reps": { "type": "integer" } },
+    "baseRepExercise": {
+      "allOf": [{
+        "$ref": "#/definitions/baseExercise"
+      }, {
+        "properties": {
+          "reps": {
+            "type": "integer"
+          }
+        },
         "required": ["reps"]
-      }
-      ]
+      }]
     },
-    "baseBarbellExercise": { "allOf": [
-      {"$ref": "#/definitions/baseRepExercise"},
-      {"properties":
-        { "weight": { "$ref": "#/definitions/weight" } },
+    "baseBarbellExercise": {
+      "allOf": [{
+        "$ref": "#/definitions/baseRepExercise"
+      }, {
+        "properties": {
+          "weight": {
+            "$ref": "#/definitions/weight"
+          }
+        },
         "required": ["weight"]
-      }
-      ]
+      }]
     },
     "weight": {
       "type": "object",
       "properties": {
-        "quantity": {"type": "number"},
-        "units": {"enum": ["pound", "kilogram"]}
+        "quantity": {
+          "type": "number"
+        },
+        "units": {
+          "enum": ["pound", "kilogram"]
+        }
       },
       "required": ["quantity", "units"]
     },
-    "rest":{
+    "rest": {
       "type": "object",
       "properties": {
-        "name": {"enum": ["Rest"]},
+        "name": {
+          "enum": ["Rest"]
+        },
         "duration": {
           "type": "object",
           "properties": {
-            "units": {"enum": ["second", "minute", "hour"]},
-            "quantity": {"type": "number"}
+            "units": {
+              "enum": ["second", "minute", "hour"]
+            },
+            "quantity": {
+              "type": "number"
+            }
           }
         }
       }
     },
-    "deadlift": { "allOf": [
-      {"$ref": "#/definitions/baseBarbellExercise"},
-      {"properties": { "name": { "pattern": "Deadlift" } } }
-      ]
+    "deadlift": {
+      "allOf": [{
+        "$ref": "#/definitions/baseBarbellExercise"
+      }, {
+        "properties": {
+          "name": {
+            "pattern": "Deadlift"
+          }
+        }
+      }]
     },
-    "ringPullup": { "allOf": [
-      {"$ref": "#/definitions/baseRepExercise"},
-      {"properties": { "name": { "pattern": "Ring pullup" } } }
-      ]
+    "ringPullup": {
+      "allOf": [{
+        "$ref": "#/definitions/baseRepExercise"
+      }, {
+        "properties": {
+          "name": {
+            "pattern": "Ring pullup"
+          }
+        }
+      }]
     }
   }
 }
