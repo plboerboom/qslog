@@ -29,14 +29,17 @@
     ]
     },
     "baseExercise": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"}
+      },
+      "required": ["name"]
     },
     "deadlift": {
       "allOf": [
         {"$ref": "#/definitions/baseExercise"},
         {"properties":
-          { "name": { "type": "string", "pattern": "Deadlift" } },
-          "required": ["name"]
+          { "name": { "pattern": "Deadlift" } }
         }
           ]
     },
@@ -44,13 +47,11 @@
       {"$ref": "#/definitions/baseExercise"},
       {"properties": {
         "name": {
-          "type": "string", 
           "pattern": "Ring pullup"
         }
-      },
-      "required": ["name"]
       }
-      ]
+      }
+        ]
     }
   }
 }
