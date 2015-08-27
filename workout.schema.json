@@ -8,7 +8,11 @@
       "type": "string",
       "format": "date-time"
     },
-    "workout": {"$ref": "#/definitions/sequence"}
+    "workout": { "oneOf": [
+      {"$ref": "#/definitions/sequence"},
+      {"$ref": "#/definitions/atomicExercise"}
+      ]
+    }
   },
 
   "required" : ["datetime", "workout"],
@@ -35,21 +39,25 @@
       },
       "required": ["name"]
     },
-    "deadlift": {
-      "allOf": [
-        {"$ref": "#/definitions/baseExercise"},
-        {"properties":
-          { "name": { "pattern": "Deadlift" } }
-        }
-          ]
+    "baseRepExercise": { "allOf": [
+      {"$ref": "#/definitions/baseExercise"},
+      {"properties":
+        { "reps": { "type": "integer" } },
+        "required": ["reps"]
+      }
+        ]
+    },
+    "deadlift": { "allOf": [
+      {"$ref": "#/definitions/baseRepExercise"},
+      {"properties":
+        { "name": { "pattern": "Deadlift" } }
+      }
+        ]
     },
     "ringPullup": { "allOf": [
-      {"$ref": "#/definitions/baseExercise"},
-      {"properties": {
-        "name": {
-          "pattern": "Ring pullup"
-        }
-      }
+      {"$ref": "#/definitions/baseRepExercise"},
+      {"properties":
+        { "name": { "pattern": "Ring pullup" } }
       }
         ]
     }
