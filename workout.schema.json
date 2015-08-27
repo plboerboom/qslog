@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ExerciseRecord",
+  "description": "TO COME",
+  "type": "object",
+  "properties": {
+    "datetime": {
+      "description": "Datetime in RFC3339 format",
+      "type": "string"
+    },
+    "workout": {"$ref": "#/definitions/sequence"}
+  },
+
+  "required" : ["datetime", "workout"],
+
+  "definitions": {
+    "sequence" : {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {"$ref": "#/definitions/sequence"},
+          {"$ref": "#/definitions/atomicExercise"}
+          ]
+      }
+    },
+    "atomicExercise": { "oneOf": [
+      {"$ref": "#/definitions/deadlift"},
+      {"$ref": "#/definitions/ringPullup"}
+    ]
+    },
+    "deadlift": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "Deadlift"
+        }
+      },
+      "required": ["name"]
+    },
+    "ringPullup": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "ringPullup"
+        }
+      },
+      "required": ["name"]
+    }
+  }
+}

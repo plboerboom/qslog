@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ExerciseRecord",
+  "description": "TO COME",
+  "type": "object",
+  "properties": {
+    "datetime": {
+      "description": "Datetime in RFC3339 format",
+      "type": "string"
+    },
+    "atoms": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/atom"}
+    },
+    "root": {"$ref": "#/definitions/sequence"}
+  },
+
+  "required" : ["datetime", "atoms"],
+
+  "definitions": {
+    "sequence" : {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {"$ref": "#/definitions/sequence"},
+          {"$ref": "#/definitions/atom"}
+          ]
+      }
+    },
+    "atom": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"}
+      },
+      "required": ["name"]
+    }
+  }
+}

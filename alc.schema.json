@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AlcoholRecord",
+  "description": "TO COME",
+  "type": "object",
+  "properties": {
+    "entries": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/entry"}
+    }
+  },
+  "required" : ["entries"],
+
+  "definitions": {
+    "entry": {
+      "type": "object",
+      "properties": {
+        "datetime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "volume": {
+          "type": "object",
+          "properties": {
+            "quantity": {
+              "type": "number"
+            },
+            "units": {
+              "type": "string",
+              "enum": ["ounce", "liter", "cup", "quart", "gallon"]
+            }
+          },
+          "required": ["quantity", "units"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["beer", "wine", "whisky"]
+        },
+        "abv": {
+          "type": "number"
+        },
+        "brand": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": ["datetime", "volume", "abv"]
+    }
+  }
+}
