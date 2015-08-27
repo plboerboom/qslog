@@ -5,8 +5,8 @@
   "type": "object",
   "properties": {
     "datetime": {
-      "description": "Datetime in RFC3339 format",
-      "type": "string"
+      "type": "string",
+      "format": "date-time"
     },
     "workout": {"$ref": "#/definitions/sequence"}
   },

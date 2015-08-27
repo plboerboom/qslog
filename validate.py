@@ -23,4 +23,7 @@ if __name__ == '__main__':
         except:
             raise
 
-    jsonschema.validate(instance, schema)
+    try:
+        jsonschema.validate(instance, schema)
+    except (jsonschema.exceptions.ValidationError) as e:
+        print e
