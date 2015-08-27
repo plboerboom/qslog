@@ -45,21 +45,17 @@
         { "reps": { "type": "integer" } },
         "required": ["reps"]
       }
-        ]
+      ]
     },
     "deadlift": { "allOf": [
       {"$ref": "#/definitions/baseRepExercise"},
-      {"properties":
-        { "name": { "pattern": "Deadlift" } }
-      }
-        ]
+      {"properties": { "name": { "pattern": "Deadlift" } } }
+      ]
     },
     "ringPullup": { "allOf": [
       {"$ref": "#/definitions/baseRepExercise"},
-      {"properties":
-        { "name": { "pattern": "Ring pullup" } }
-      }
-        ]
+      {"properties": { "name": { "pattern": "Ring pullup" } } }
+      ]
     }
   }
 }
