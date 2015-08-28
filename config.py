@@ -4,6 +4,7 @@ from qslog import Error
 import dateutil.parser
 import datetime
 import re
+import pprint
 
 def parse_entry(s):
     fields = s.split()
@@ -11,17 +12,31 @@ def parse_entry(s):
     if len(fields) < 4:
         raise Error("insufficient fields")
 
-    return fields
+    # TODO: validate
+    # TODO: return structured entry
+    typ = fields[0]
+
+    try:
+        quant = float(fields[1])
+    except ValueError:
+        raise Error('non-numeric quantity')
+
+    units = fields[2]
+    abv = fields[3]
+
+    entry = { 'volume': { 'quantity': quant, 'units': units },
+            'type': typ, 'abv': abv }
+    return entry
 
 def onenterhome(e):
     e.command.prompt = '> '
     
 def onenterlog(e):
-    print e.command.record
+    pprint.pprint(e.command.record)
     e.command.prompt = '>> '
 
 def onreenterlog(e):
-    print e.command.record
+    pprint.pprint(e.command.record)
 
 def onbeforelog(e):
     try:
@@ -42,13 +57,11 @@ def do_log(self, line):
 
 def onbeforeadd(e):
     try:
-        typ, quant, units, abv = parse_entry(e.command.line)
-    except Error:
-        print 'failed'
+        entry = parse_entry(e.command.line)
+    except Error as e:
+        print e
         return False
 
-    entry = { 'volume': { 'quantity': quant, 'units': units },
-            'type': typ, 'abv': abv }
 
     e.command.record.setdefault('entries', []).append(entry)
 
