@@ -1,8 +1,15 @@
 {
-  "entries":
-  [
+  "datetime": "2015-08-26T20:00:00-04:00",
+  "entries": [
     {
-      "datetime": "2015-08-26T20:00:00-04:00",
+      "volume": {
+        "quantity": 1,
+        "units": "liter"
+      },
+      "type": "wine",
+      "abv": 13
+    },
+    {
       "volume": {
         "quantity": 1,
         "units": "liter"
@@ -10,6 +17,5 @@
       "type": "wine",
       "abv": 13
     }
-      ]
+  ]
 }
-

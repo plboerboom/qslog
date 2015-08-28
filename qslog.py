@@ -1,12 +1,23 @@
 #! /usr/bin/env python
 
+import argparse
 import types
 import cmd
 import readline
 
 import fysom
 
+class Error(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return self.msg
+
+
 def transition(f):
+    # This function is intended to serve as the decorator for each
+    # cmd 'do_*' function. It expects that the state machine has
+    # a matching event, and triggers that transition in the state machine.
     def inner(self, line):
         smf_name = f.__name__.replace('do_', '')
 
@@ -23,22 +34,24 @@ def transition(f):
         return res
     return inner
 
+
 class Command(cmd.Cmd):
-    def __init__(self):
+
+    def __init__(self, config_file):
         import config
 
         # Automatically add callbacks defined in config.
-        event_callback_prefixes = [ 'onbefore', 'onafter' ]
-        state_callback_prefixes = [ 'onleave', 'onenter', 'onreenter' ]
+        event_callback_prefixes = ['onbefore', 'onafter']
+        state_callback_prefixes = ['onleave', 'onenter', 'onreenter']
 
         event_names = [e['name'] for e in config.state_config['events']]
         state_names = set(
-                [
+            [
                 state for sublist in
                 [[e['src'], e['dst']] for e in config.state_config['events']]
                 for state in sublist
-                ]
-                )
+            ]
+        )
 
         config.state_config['callbacks'] = {}
         callbacks = config.state_config['callbacks']
@@ -82,7 +95,7 @@ class Command(cmd.Cmd):
                 return getattr(self, fnname)(e)
 
         fysom.Fysom._before_event = new_before_event
-        
+
         # We want to attach and detach commands to cmd
         # when transitioning states. To do so, we
         # 'patch' fysom's enter state method
@@ -101,8 +114,9 @@ class Command(cmd.Cmd):
                     if fname in vars(config):
                         f = getattr(config, fname)
                         if hasattr(f, '__call__'):
-                            setattr(command, fname, types.MethodType(f, command)) 
-            
+                            setattr(command, fname,
+                                    types.MethodType(f, command))
+
             # original method code
             for fnname in ['onenter' + e.dst, 'on' + e.dst]:
                 if hasattr(self, fnname):
@@ -133,8 +147,9 @@ class Command(cmd.Cmd):
         return True
 
 
-
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('config')
+    args = parser.parse_args()
 
-    Command().cmdloop()
-
+    Command(args.config).cmdloop()

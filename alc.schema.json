@@ -4,21 +4,23 @@
   "description": "TO COME",
   "type": "object",
   "properties": {
+    "datetime": {
+      "format": "date-time"
+    },
     "entries": {
       "type": "array",
-      "items": {"$ref": "#/definitions/entry"}
+      "items": {
+        "$ref": "#/definitions/entry"
+      }
     }
   },
-  "required" : ["entries"],
-
+  "required": [
+    "entries"
+  ],
   "definitions": {
     "entry": {
       "type": "object",
       "properties": {
-        "datetime": {
-          "type": "string",
-          "format": "date-time"
-        },
         "volume": {
           "type": "object",
           "properties": {
@@ -27,14 +29,27 @@
             },
             "units": {
               "type": "string",
-              "enum": ["ounce", "liter", "cup", "quart", "gallon"]
+              "enum": [
+                "ounce",
+                "liter",
+                "cup",
+                "quart",
+                "gallon"
+              ]
             }
           },
-          "required": ["quantity", "units"]
+          "required": [
+            "quantity",
+            "units"
+          ]
         },
         "type": {
           "type": "string",
-          "enum": ["beer", "wine", "whisky"]
+          "enum": [
+            "beer",
+            "wine",
+            "whisky"
+          ]
         },
         "abv": {
           "type": "number"
@@ -46,7 +61,10 @@
           "type": "string"
         }
       },
-      "required": ["datetime", "volume", "abv"]
+      "required": [
+        "volume",
+        "abv"
+      ]
     }
   }
 }
