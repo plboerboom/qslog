@@ -7,6 +7,9 @@
     "datetime": {
       "format": "date-time"
     },
+    "userid": {
+      "type": "string"
+    },
     "entries": {
       "type": "array",
       "items": {
@@ -15,6 +18,8 @@
     }
   },
   "required": [
+    "datetime",
+    "userid",
     "entries"
   ],
   "definitions": {
@@ -34,7 +39,8 @@
                 "liter",
                 "cup",
                 "quart",
-                "gallon"
+                "gallon",
+                "milliliter"
               ]
             }
           },
@@ -54,14 +60,12 @@
         "abv": {
           "type": "number"
         },
-        "brand": {
-          "type": "string"
-        },
         "note": {
           "type": "string"
         }
       },
       "required": [
+        "type",
         "volume",
         "abv"
       ]
