@@ -3,7 +3,6 @@
 import types
 import cmd
 import readline
-import inspect
 
 import fysom
 

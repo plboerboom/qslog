@@ -26,7 +26,7 @@ def do_wo(self, line):
     except ValueError:
         return
 
-    self.record = {'date': date}
+    self.record = {'datetime': date}
 
 @transition
 def do_abort(self, line):
@@ -55,7 +55,5 @@ state_config = {
             ]
         }
 
-# TODO: Figure out how to pass state across transitions
 # TODO: Write data
 # TODO: Autocomplete
-# TODO: Control state transition with logic in command
