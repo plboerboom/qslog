@@ -9,7 +9,29 @@ import json
 import jsonschema
 import tzlocal
 import pytz
+import os.path
 
+schema_path = 'alc.schema.json'
+userid = 'plboerboom'
+local_data_path = 'alclog-data'
+
+normalize_units = {
+        'oz': 'ounce',
+        'oz.': 'ounce',
+        'ounce': 'ounce',
+        'ounces': 'ounce',
+        'ml': 'milliliter',
+        'milliliter': 'milliliter',
+        'milliliters': 'milliliter',
+        'liter': 'liter',
+        'liters': 'liter',
+        'cup': 'cup',
+        'cups': 'cup',
+        'quart': 'quart',
+        'quarts': 'quart',
+        'gallon': 'gallon',
+        'gallons': 'gallon'
+        }
 
 def parse_entry(s):
 
@@ -40,8 +62,11 @@ def parse_entry(s):
         '(quarts?$)',
         '(gallons?$)'
         ])
+
     if not re.match(units_re, units):
         raise Error('Unrecognized unit \'%s\'' % units)
+
+    units = normalize_units[units]
 
     try:
         abv = float(fields[3])
@@ -91,7 +116,7 @@ def do_log(self, line):
         except ValueError:
             raise
 
-    self.record = {'datetime': dt.isoformat()}
+    self.record = {'datetime': dt.isoformat(), 'userid': userid}
 
 
 def onbeforeadd(e):
@@ -112,7 +137,22 @@ def do_add(self, line):
 
 @transition
 def do_save(self, line):
-    print json.dumps(self.record)
+    with open(schema_path) as f:
+        try:
+            schema = json.load(f)
+        except:
+            raise
+
+    try:
+        jsonschema.validate(self.record, schema)
+    except (jsonschema.exceptions.ValidationError) as e:
+        print e
+
+    # TODO: check that path exists
+    filename = self.record['datetime'].replace(':','_') + '.json'
+    filepath = os.path.join(local_data_path, filename)
+    with open(filepath, 'w') as f:
+        print json.dump(self.record, f)
 
 
 state_config = {
