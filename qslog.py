@@ -4,6 +4,7 @@ import argparse
 import types
 import cmd
 import readline
+import sys
 
 import fysom
 
@@ -38,7 +39,11 @@ def transition(f):
 class Command(cmd.Cmd):
 
     def __init__(self, config_file):
-        import config
+        try:
+            config = __import__(config_file)
+        except ImportError as e:
+            print e
+            sys.exit()
 
         # Automatically add callbacks defined in config.
         event_callback_prefixes = ['onbefore', 'onafter']
