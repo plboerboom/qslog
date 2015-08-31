@@ -164,5 +164,4 @@ state_config = {
     ]
 }
 
-# TODO: Write data
 # TODO: Autocomplete
